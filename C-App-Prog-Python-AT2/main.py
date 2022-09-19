@@ -48,3 +48,28 @@ def main(test=False):
 
 if __name__ == '__main__':
     print(main(test=True))
+
+
+"""
+    
+encrypted_letter_content = "hello bob"
+shift = 3
+li = []
+print("letter content: " + encrypted_letter_content)
+#li is empty list for word to be converted into
+for count, value in enumerate(encrypted_letter_content):
+    value = ord(value) + shift
+    li.append(chr(value))
+
+
+decrypted_letter_content = ''.join(li)
+li.clear()
+print("encrypted content: " + decrypted_letter_content)
+for count, value in enumerate(decrypted_letter_content):
+    value = ord(value) - shift
+    li.append(chr(value))
+
+decrypted_letter_content = ''.join(li)
+print("decrypted content: " + decrypted_letter_content)
+
+"""

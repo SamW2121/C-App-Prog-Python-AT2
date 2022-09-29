@@ -1,20 +1,34 @@
+from letters import Letter
 from person import Person
 
 
 class Bob(Person):
-    def __init__(self):
-        super().__init__()
-        self._letter_content = ""
-        self._recieved_letter_content = ""
+    def __init__(self, letter_content=None, received_letter_content=None):
+        super().__init__("Alice")
+        self._letter_content = letter_content
+        self._received_letter_content = received_letter_content
+        self._encrypted_content = []
+        self._decrypting_list = []
+        self._decrypted_content = ""
 
     def write_letter(self):
-        pass
+        self.encrypt_letter(self._letter_content, self._encrypted_content)
+        self._letter = Letter(self._encrypted_content, self._addressee)
+        self._letter.mark_unread()
 
     def read_letter(self):
-        pass
+        self._encrypted_content = self._letter._letter_contents
+        self.decrypt_letter(self._encrypted_content, self._decrypting_list)
+        self._letter.mark_as_read()
 
-    def encrypt_letter(self):
-        pass
+    def encrypt_letter(self, letter_content=None, encrypted_list=None, shift=3):
+        encrypted_list.clear()
+        for value in letter_content:
+            value = ord(value) + shift
+            encrypted_list.append(chr(value))
 
-    def decrypt_letter(self):
-        pass
+    def decrypt_letter(self, encrypted_list=None, decrypted_list=None, shift=3):
+        for value in encrypted_list:
+            value = ord(value) - shift
+            decrypted_list.append(chr(value))
+        self._decrypted_content = ''.join(decrypted_list)

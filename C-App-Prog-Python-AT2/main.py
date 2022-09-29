@@ -1,44 +1,121 @@
-from person import Person
 from letter_box import LetterBox
+from postoffice import PostOffice
+from alice import Alice
+from bob import Bob
+from charlie import Charlie
+
 
 def play():
-    """ Check that the letter in the letterBox says hello Alice
-        >>> new_letter_box = LetterBox()
-        >>> bob = Person("Hello Alice", None)
-        >>> alice = Person("Hello Bob", None)
-        >>> bob.write_letter()
-        >>> new_letter_box.put_flag_up(bob.deliver_letter())
-        >>> print(new_letter_box._letter._letter_contents)
-        Hello Alice
-        >>> alice.receive_letter(new_letter_box)
-        >>> print(new_letter_box._flag)
-        False
-        >>> alice.read_letter()
-        >>> print(new_letter_box._letter._read)
-        True
-        >>> alice.write_letter()
-        >>> new_letter_box.put_flag_up(alice.deliver_letter())
-        >>> print(new_letter_box._flag)
-        True
-        >>> bob.receive_letter(new_letter_box)
-        >>> bob.read_letter()
-        >>> print(new_letter_box._letter._letter_contents)
-        Hello Bob
-        """
+    """
+    >>> alice = Alice("Hello Bob")
+    >>> bob = Bob("Hello Alice")
+    >>> charlie = Charlie()
+    >>> alices_letter_box = LetterBox("Alice")
+    >>> bobs_letter_box = LetterBox("Bob")
+    >>> post_office = PostOffice()
 
-    new_letter_box = LetterBox()
-    bob = Person("Hello Alice", None)
-    alice = Person("Hello Bob", None)
-    bob.write_letter()
-    new_letter_box.put_flag_up(bob.deliver_letter())
+    >>> alice.write_letter()
+    >>> print(alice._letter._read)
+    False
+    >>> print(alice._encrypted_content)
+    ['K', 'h', 'o', 'o', 'r', '#', 'E', 'r', 'e']
+    >>> alice.deliver_letter(True, post_office)
+    >>> print(post_office._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'E', 'r', 'e']
+    >>> charlie.receive_letter(None, post_office, True)
+    >>> print(charlie._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'E', 'r', 'e']
+    >>> charlie.read_addressee()
+    >>> print(charlie._addressee)
+    Bob
+    >>> charlie.deliver_letter(False, post_office, bobs_letter_box)
+    >>> print(bobs_letter_box._flag)
+    True
+    >>> print(bobs_letter_box._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'E', 'r', 'e']
+    >>> bob.receive_letter(bobs_letter_box)
+    >>> print(bobs_letter_box._flag)
+    False
+    >>> print(bob._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'E', 'r', 'e']
+    >>> bob.read_letter()
+    >>> print(bob._letter._read)
+    True
+    >>> print(bob._decrypted_content)
+    Hello Bob
+    >>> bob.write_letter()
+    >>> print(bob._letter._read)
+    False
+    >>> print(bob._encrypted_content)
+    ['K', 'h', 'o', 'o', 'r', '#', 'D', 'o', 'l', 'f', 'h']
+    >>> bob.deliver_letter(True, post_office)
+    >>> print(post_office._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'D', 'o', 'l', 'f', 'h']
+    >>> charlie.receive_letter(None, post_office, True)
+    >>> print(post_office._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'D', 'o', 'l', 'f', 'h']
+    >>> charlie.read_addressee()
+    >>> charlie.deliver_letter(False, post_office, alices_letter_box)
+    >>> print(alices_letter_box._flag)
+    True
+    >>> print(alices_letter_box._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'D', 'o', 'l', 'f', 'h']
+    >>> alice.receive_letter(alices_letter_box)
+    >>> print(alices_letter_box._flag)
+    False
+    >>> print(alice._letter._letter_contents)
+    ['K', 'h', 'o', 'o', 'r', '#', 'D', 'o', 'l', 'f', 'h']
+    >>> alice.read_letter()
+    >>> print(alice._letter._read)
+    True
+    >>> print(alice._decrypted_content)
+    Hello Alice
+    """
 
+    alice = Alice("Hello Bob")
+    bob = Bob("Hello Alice")
+    charlie = Charlie()
+    alices_letter_box = LetterBox("Alice")
+    bobs_letter_box = LetterBox("Bob")
+    post_office = PostOffice()
 
-    alice.receive_letter(new_letter_box)
-    alice.read_letter()
     alice.write_letter()
-    new_letter_box.put_flag_up(alice.deliver_letter())
-    bob.receive_letter(new_letter_box)
+    print(f"new letters read status: {alice._letter._read}")
+    print(f"Alice encrypted letter: {alice._encrypted_content}")
+    alice.deliver_letter(True, post_office)
+    print(f"post office letter reads: {post_office._letter._letter_contents}")
+    charlie.receive_letter(None, post_office, True)
+    print(f"letter charlie holds reads: {charlie._letter._letter_contents}")
+    charlie.read_addressee()
+    print(f"this letter is going to: {charlie._addressee}")
+    charlie.deliver_letter(False, post_office, bobs_letter_box)
+    print(f"Bobs letter box is up: {bobs_letter_box._flag}")
+    print(f"Bobs letter boxes letter reads:{bobs_letter_box._letter._letter_contents}")
+    bob.receive_letter(bobs_letter_box)
+    print(f"bobs letter box flag status: {bobs_letter_box._flag}")
+    print(f"Bobs letter reads: {bob._letter._letter_contents}")
     bob.read_letter()
+    print(f"letter read status: {bob._letter._read}")
+    print(f"translated that means: {bob._decrypted_content}")
+    bob.write_letter()
+    print(f"new letters read status: {bob._letter._read}")
+    print(f"Bobs encrypted letter: {bob._encrypted_content}")
+    bob.deliver_letter(True, post_office)
+    print(f"post office letter reads: {post_office._letter._letter_contents}")
+    charlie.receive_letter(None, post_office, True)
+    print(f"letter charlie holds reads: {post_office._letter._letter_contents}")
+    charlie.read_addressee()
+    charlie.deliver_letter(False, post_office, alices_letter_box)
+    print(f"Alice letter box flag status: {alices_letter_box._flag}")
+    print(f"Alices letter boxes letter reads: {alices_letter_box._letter._letter_contents}")
+    alice.receive_letter(alices_letter_box)
+    print(f"Alice letter box flag status: {alices_letter_box._flag}")
+    print(f"Alices letter reads: {alice._letter._letter_contents}")
+    alice.read_letter()
+    print(f"letter read status: {alice._letter._read}")
+    print(f"translated that means: {alice._decrypted_content}")
+
+
 
 def main(test=False):
     if test:
@@ -46,30 +123,11 @@ def main(test=False):
         return doctest.testmod()
     play()
 
+
 if __name__ == '__main__':
     print(main(test=True))
 
 
-"""
-    
-encrypted_letter_content = "hello bob"
-shift = 3
-li = []
-print("letter content: " + encrypted_letter_content)
-#li is empty list for word to be converted into
-for count, value in enumerate(encrypted_letter_content):
-    value = ord(value) + shift
-    li.append(chr(value))
 
 
-decrypted_letter_content = ''.join(li)
-li.clear()
-print("encrypted content: " + decrypted_letter_content)
-for count, value in enumerate(decrypted_letter_content):
-    value = ord(value) - shift
-    li.append(chr(value))
 
-decrypted_letter_content = ''.join(li)
-print("decrypted content: " + decrypted_letter_content)
-
-"""
